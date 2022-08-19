@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import data from '../bench/data.json';
+import mockData from '../bench/data.json';
 
 export const useHttp = () => {
   const [loading, setLoading] = useState(false);
@@ -8,8 +8,6 @@ export const useHttp = () => {
   const request = useCallback(async (url: string) => {
     setLoading(true);
     try {
-      console.log(url);
-      
       // const response = await fetch(url, {
       //   headers: {
       //     'Content-Type': 'application/json',
@@ -20,6 +18,8 @@ export const useHttp = () => {
       // if (!response.ok) {
       //   throw new Error(data.message || 'Something went wrong');
       // }
+
+      const data = mockData;
 
       setLoading(false);
 
