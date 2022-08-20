@@ -44,86 +44,73 @@ const prepData = (packed: (number | string)[]): uPlot.AlignedData => {
   return data;
 };
 
-const dummyPlugin = (): uPlot.Plugin => ({
-  hooks: {
-    init(u: uPlot, opts: uPlot.Options) {
-      void u;
-      void opts;
-    },
-  },
-});
+// const dummyPlugin = (): uPlot.Plugin => ({
+//   hooks: {
+//     init(u: uPlot, opts: uPlot.Options) {
+//       void u;
+//       void opts;
+//     },
+//   },
+// });
 
 const initialOptions: uPlot.Options = {
-  title: "Fixed length / sliding data slices",
+  title: 'Fixed length / sliding data slices',
   width: 1600,
   height: 600,
+  cursor: {
+    drag: {
+      setScale: false,
+    },
+  },
+  select: {
+    show: false,
+    top: 0,
+    left: 0,
+    width: 1600,
+    height: 600,
+  },
   series: [
+    {},
     {
-      label: "Date"
+      label: 'CPU',
+      scale: '%',
+      value: (u, v) => (v == null ? '-' : v.toFixed(1) + '%'),
+      stroke: 'red',
     },
     {
-      label: "",
-      points: { show: false },
-      stroke: "blue",
-      fill: "blue"
-    }
+      label: 'RAM',
+      scale: '%',
+      value: (u, v) => (v == null ? '-' : v.toFixed(1) + '%'),
+      stroke: 'blue',
+    },
+    {
+      label: 'TCP Out',
+      scale: 'mb',
+      value: (u, v) => (v == null ? '-' : v.toFixed(2) + ' MB'),
+      stroke: 'green',
+    },
   ],
-  scales: { x: { time: false } },
-  plugins: [dummyPlugin()]
+  axes: [
+    {},
+    {
+      scale: '%',
+      values: (u, vals, space) => vals.map((v) => +v.toFixed(1) + '%'),
+    },
+    {
+      side: 1,
+      scale: 'mb',
+      values: (u, vals, space) => vals.map((v) => +v.toFixed(2) + ' MB'),
+      grid: { show: false },
+    },
+  ],
 };
-//{
-//   title: 'Fixed length / sliding data slices',
-//   width: 1600,
-//   height: 600,
-//   cursor: {
-//     drag: {
-//       setScale: false,
-//     },
-//   },
-//   select: {
-//     show: false,
-//     top: 0,
-//     left: 0,
-//     width: 1600,
-//     height: 600,
-//   },
-//   series: [
-//     {},
-//     {
-//       label: 'CPU',
-//       scale: '%',
-//       value: (u, v) => (v == null ? '-' : v.toFixed(1) + '%'),
-//       stroke: 'red',
-//     },
-//     {
-//       label: 'RAM',
-//       scale: '%',
-//       value: (u, v) => (v == null ? '-' : v.toFixed(1) + '%'),
-//       stroke: 'blue',
-//     },
-//     {
-//       label: 'TCP Out',
-//       scale: 'mb',
-//       value: (u, v) => (v == null ? '-' : v.toFixed(2) + ' MB'),
-//       stroke: 'green',
-//     },
-//   ],
-//   axes: [
-//     {},
-//     {
-//       scale: '%',
-//       values: (u, vals, space) => vals.map((v) => +v.toFixed(1) + '%'),
-//     },
-//     {
-//       side: 1,
-//       scale: 'mb',
-//       values: (u, vals, space) => vals.map((v) => +v.toFixed(2) + ' MB'),
-//       grid: { show: false },
-//     },
-//   ],
-// };
 
-const initialData: uPlot.AlignedData = [[0, 0], [0, 0]];
+const initialData: uPlot.AlignedData = [
+  [0, 0],
+  [0, 0],
+  [0, 0],
+  [0, 0],
+];
 
 const Chart: FC = () => {
   const [options, setOptions] = useState<uPlot.Options>(initialOptions);
@@ -143,10 +130,17 @@ const Chart: FC = () => {
     return () => clearInterval(timer.current as NodeJS.Timeout);
   }, []);
 
-  const makeChart = useCallback(() => setStartPlotting(prevStartPlotting => prevStartPlotting + 10), [startPlotting, setStartPlotting]);
+  const makeChart = useCallback(
+    () => setStartPlotting((prevStartPlotting) => prevStartPlotting + 10),
+    [startPlotting, setStartPlotting]
+  );
 
-  const sliceData = useCallback((start: number, end:number): Array<Array<number>> => (data as Array<number>[]).map(d => d.slice(start, end)), [data]);
-  
+  const sliceData = useCallback(
+    (start: number, end: number): Array<Array<number>> =>
+      (data as Array<number>[]).map((d) => d.slice(start, end)),
+    [data]
+  );
+
   useEffect(() => {
     if (error) alert(error);
     clearError();
@@ -160,7 +154,14 @@ const Chart: FC = () => {
     <>
       {loading && <h2>Fetching data.json (2.07MB)....</h2>}
       {!loading && <h2>Done!</h2>}
-      {!loading && <UplotReact options={options} data={sliceData(startPlotting, startPlotting + 3000) as uPlot.AlignedData} />}
+      {!loading && (
+        <UplotReact
+          options={options}
+          data={
+            sliceData(startPlotting, startPlotting + 3000) as uPlot.AlignedData
+          }
+        />
+      )}
     </>
   );
 };
