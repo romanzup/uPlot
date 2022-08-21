@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import mockData from '../bench/data.json';
+import mockData from '../bench/Left-Chart.json';
 
 export const useHttp = () => {
   const [loading, setLoading] = useState(false);
