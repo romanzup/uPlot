@@ -265,7 +265,7 @@ const initialOptions3: uPlot.Options = {
 
 interface obj {
   [x: string]: number;
-}
+};
 
 const prepData = (packed: obj[]): uPlot.AlignedData => {
   console.time('prep');
@@ -273,7 +273,6 @@ const prepData = (packed: obj[]): uPlot.AlignedData => {
   // epoch,idl,recv,send,read,writ,used,free
 
   //{"time":1660552965,"CATR40AFBC0DBC7157CC97D54547512B702F:pv":7.93,"CATR190F2C6D185252C1942C59E8B162BDDE:reference_sp":916,"CATR3599ACFDD4035EFD81007AA97BC692BD:reference_sp":1172,"CATRA2F8FB87440058A5A2549182C49FDDA8:pvr":2.17,"CATR2670CE5395C9516C9ED4AFC63241EDBA:reference_sp":1670,"CATR1D82475C67A35E8288034CFA862E7008:pv":9.35,"CATR4E96A45F119859D7B0F1533394953589:reference_sp":1093,"CATRE7CAA0D97E8F540D9F8AD60D3A15FA26:pv":2.88,"CATRF2DA988B14825A1E9CFBA025462AEDE1:reference_sp":1227,"CATRCE648802D4BA5D40B5CEA3FBFFE2B259:pv":1.5,"CATR493EB28AE4E45EC89F5339C46D7A228F:reference_sp":1818,"CATR6B74FCBFD6F2537FADDAAEEBA262A3D4:reference_sp":347,"CATR8DE446DAF8FC5DFF873BB901A67E3217:pv":9.68,"CATR358C7AA1580857E28DD2C3913E208E1F:pv":0.91}
-  
 
   // 55,550 data points x 3 series = 166,650
   let data: uPlot.AlignedData = packed.reduce((accumulator: uPlot.AlignedData, currentValue: obj, id: number) => {
