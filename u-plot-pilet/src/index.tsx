@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { PiletApi } from 'u-plot-instance';
+import { Link } from "react-router-dom";
 
 export function setup(app: PiletApi) {
   app.showNotification('Hello from the first Piral!', {
@@ -11,6 +12,11 @@ export function setup(app: PiletApi) {
       Documentation
     </a>
   ));
+
+  app.registerPage(
+    "/sample",
+    React.lazy(() => import("../pages"))
+  );
 
   app.registerTile(() => {
     const [testValue, setTestValue] = React.useState<number>(
@@ -42,6 +48,8 @@ export function setup(app: PiletApi) {
           {testValue}
         </p>
         <button onClick={() => app.emit('testTracing', testValue + 1)}>+</button>
+        <hr />
+        <Link to="/sample">See Sample</Link>
       </>
     );
   });
